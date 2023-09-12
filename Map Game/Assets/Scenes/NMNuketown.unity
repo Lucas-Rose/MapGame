@@ -18185,20 +18185,24 @@ PrefabInstance:
       objectReference: {fileID: 4328270943444734307, guid: 1c675d399948d294fafb0f8ab8f0d384, type: 3}
     - target: {fileID: 7595780333557631172, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
       propertyPath: xOffset.x
-      value: -1.5
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 7595780333557631172, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
       propertyPath: xOffset.y
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7595780333557631172, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
       propertyPath: zOffset.x
-      value: -1.5
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 7595780333557631172, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
       propertyPath: zOffset.y
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7595780333557631172, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
+      propertyPath: goalIndicator
+      value: 
+      objectReference: {fileID: 1301396005805352656, guid: 441d609580e4c4e4e9308dee396af7f1, type: 3}
     - target: {fileID: 7595780333557631172, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
       propertyPath: offSetIndicator
       value: 
@@ -18213,7 +18217,19 @@ PrefabInstance:
       objectReference: {fileID: 2096892953}
     - target: {fileID: 7595780333557631172, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
       propertyPath: waypointSensitivity
-      value: 1.5
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595780333557631173, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
+      propertyPath: m_Speed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595780333557631173, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
+      propertyPath: m_AutoBraking
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595780333557631173, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
+      propertyPath: m_Acceleration
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 7595780333557631178, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
       propertyPath: m_RootOrder
