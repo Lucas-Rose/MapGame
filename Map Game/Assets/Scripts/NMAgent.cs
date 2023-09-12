@@ -1,23 +1,44 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.AI;
 
 public class NMAgent : MonoBehaviour
 {
     [SerializeField] private Camera cam;
     [SerializeField] private NavMeshAgent agent;
+    [SerializeField] private GameObject pointPrefab;
 
-    // Update is called once per frame
+    private void Start()
+    {
+        agent.updateRotation = false;
+    }
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButtonDown(0))
         {
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+            StartCoroutine(SetLocationTarget());
+        }
+    }
 
-            if (Physics.Raycast(ray, out hit))
-            {
-                agent.SetDestination(hit.point);
+    private IEnumerator SetLocationTarget()
+    {
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            //Debug.Log(hit.point);
+            agent.SetDestination(hit.point);
+            yield return new WaitUntil(PathFound);
+            foreach(Vector3 i in agent.path.corners){
+                Instantiate(pointPrefab, i, Quaternion.identity);
             }
         }
+    }
+
+    private bool PathFound()
+    {
+        return agent.hasPath;
     }
 }
