@@ -18,6 +18,7 @@ public class ComplexNMAgent : MonoBehaviour
     [SerializeField] private float waypointSensitivity;
     [SerializeField] private Vector2 xOffset;
     [SerializeField] private Vector2 zOffset;
+    [SerializeField] private bool drawingIndicators;
 
     private List<Vector3> locationGoals;
     private List<Vector3> waypoints;
@@ -70,8 +71,11 @@ public class ComplexNMAgent : MonoBehaviour
         {
             if (Vector3.Distance(transform.position, locationGoals[0]) <= waypointSensitivity)
             {
-                Destroy(goalIndicators[0]);
-                goalIndicators.RemoveAt(0);
+                if (drawingIndicators)
+                {
+                    Destroy(goalIndicators[0]);
+                    goalIndicators.RemoveAt(0);
+                }
                 locationGoals.RemoveAt(0);
             }
         }
@@ -82,8 +86,12 @@ public class ComplexNMAgent : MonoBehaviour
         List<Vector3> newPoints = GenerateWaypoints(goalLocation);
         newPoints = OffSetWaypoints(newPoints);
         AddToWaypoints(newPoints);
-        DrawWaypoints(waypoints);
-        goalIndicators.Add(Instantiate(goalIndicator, goalLocation, Quaternion.identity, indicatorContainer));
+
+        if (drawingIndicators)
+        {
+            DrawWaypoints(waypoints);
+            goalIndicators.Add(Instantiate(goalIndicator, goalLocation, Quaternion.identity, indicatorContainer));
+        }
     }
     private List<Vector3> GenerateWaypoints(Vector3 point)
     {
