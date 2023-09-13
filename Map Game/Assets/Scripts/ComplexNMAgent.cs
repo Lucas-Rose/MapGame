@@ -12,6 +12,7 @@ public class ComplexNMAgent : MonoBehaviour
     [SerializeField] private GameObject indicator;
     [SerializeField] private GameObject offsetIndicator;
     [SerializeField] private GameObject goalIndicator;
+    [SerializeField] private GameObject obstacleIndicator;
 
     [Header("Settings")]
     [SerializeField] private float waypointSensitivity;
@@ -41,6 +42,16 @@ public class ComplexNMAgent : MonoBehaviour
             if (Physics.Raycast(ray, out hit))
             {
                 AddLocationGoal(hit.point);
+            }
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                Instantiate(obstacleIndicator, hit.point, Quaternion.identity);
             }
         }
         if (waypoints.Count > 0)

@@ -18212,6 +18212,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5042612645964217264, guid: d978fc36b4ff5d94db21cf4c10a964a1, type: 3}
     - target: {fileID: 7595780333557631172, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
+      propertyPath: obstacleIndicator
+      value: 
+      objectReference: {fileID: 5802630722502565270, guid: 406000639227bd84a9c084867d91ef91, type: 3}
+    - target: {fileID: 7595780333557631172, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
       propertyPath: indicatorContainer
       value: 
       objectReference: {fileID: 2096892953}
