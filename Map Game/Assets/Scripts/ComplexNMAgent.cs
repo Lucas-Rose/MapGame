@@ -52,7 +52,7 @@ public class ComplexNMAgent : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                Instantiate(obstacleIndicator, hit.point, Quaternion.identity);
+                //Instantiate(obstacleIndicator, hit.point, Quaternion.identity);
             }
         }
         if (waypoints.Count > 0)
@@ -99,7 +99,8 @@ public class ComplexNMAgent : MonoBehaviour
         NavMeshPath newPath = new NavMeshPath();
         if(waypoints.Count == 0)
         {
-            agent.CalculatePath(point, newPath);
+            //agent.CalculatePath(point, newPath);
+            NavMesh.CalculatePath(transform.position, point, NavMesh.AllAreas, newPath);
         }
         else
         {
