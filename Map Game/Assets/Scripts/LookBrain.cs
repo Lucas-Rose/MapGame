@@ -38,7 +38,7 @@ public class LookBrain : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
-            Debug.Log("Aiming");
+            shotPoints = new List<Vector3>();
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if(Physics.Raycast(ray, out hit)){
@@ -67,13 +67,12 @@ public class LookBrain : MonoBehaviour
                 Quaternion camRot = Quaternion.LookRotation(camLookPos);
                 camRot.eulerAngles = new Vector3(camRot.eulerAngles.x, cameraTransform.rotation.eulerAngles.y, cameraTransform.rotation.eulerAngles.z);
 
-                transform.rotation = Quaternion.Slerp(transform.rotation, bodyRot, Time.deltaTime * 15 * shotPoints[0].z / shotTotal);
-                cameraTransform.rotation = Quaternion.Slerp(cameraTransform.rotation, camRot, Time.deltaTime * 15 * shotPoints[0].z / shotTotal);
+                transform.rotation = Quaternion.Slerp(transform.rotation, bodyRot, Time.deltaTime * 15 * Vector3.Distance(transform.position, shotPoints[0]) / shotTotal);
+                cameraTransform.rotation = Quaternion.Slerp(cameraTransform.rotation, camRot, Time.deltaTime * 15 * Vector3.Distance(transform.position, shotPoints[0]) / shotTotal);
                 cameraTransform.rotation = Quaternion.Euler(cameraTransform.localEulerAngles.x, transform.localEulerAngles.y, 0);
 
-                if (movingTime > aimingGradient * 5 * shotPoints[0].z / shotTotal)
+                if (movingTime > aimingGradient * Vector3.Distance(transform.position, shotPoints[0]) / shotTotal)
                 {
-                    Debug.Log("Reached Target!");
                     shotPoints.RemoveAt(0);
                     movingTime = 0;
                 }
@@ -96,11 +95,11 @@ public class LookBrain : MonoBehaviour
 
         numberOfMiss += (Random.value > remainderChance) ? 1 : 0;
 
-        GenerateShotVectors(targetPos, (int)numberOfMiss, Vector3.Distance(transform.position, targetPos));
+        GenerateShotVectors(targetPos, (int)numberOfMiss);
         currTime = 0;
     }
 
-    public void GenerateShotVectors(Vector3 target, int n, float dist)
+    public void GenerateShotVectors(Vector3 target, int n)
     {
         shotPoints = new List<Vector3>();
         float offSetX;
@@ -114,14 +113,14 @@ public class LookBrain : MonoBehaviour
             offSetY = Random.value > .5f ? Random.Range(-yAccuracy * 3, 0) : Random.Range(0, yAccuracy * 3);
             xLoc = target.x + offSetX;
             yLoc = target.y + offSetY;
-            shotPoints.Add(new Vector3(xLoc, yLoc, dist));
-            Instantiate(missIndicator, new Vector3(shotPoints[shotPoints.Count - 1].x, shotPoints[shotPoints.Count - 1].y, dist), Quaternion.identity);
+            shotPoints.Add(new Vector3(xLoc, yLoc, target.z));
+            Instantiate(missIndicator, new Vector3(shotPoints[shotPoints.Count - 1].x, shotPoints[shotPoints.Count - 1].y, target.z), Quaternion.identity);
         }
         offSetX = Random.value > .5f ? Random.Range(-xAccuracy, 0) : Random.Range(0, xAccuracy);
         offSetY = Random.value > .5f ? Random.Range(-yAccuracy, 0) : Random.Range(0, yAccuracy);
         xLoc = target.x + offSetX;
         yLoc = target.y + offSetY;
-        shotPoints.Add(new Vector3(xLoc, yLoc, dist));
+        shotPoints.Add(new Vector3(xLoc, yLoc, target.z));
         shotTotal = shotPoints.Count;
     }
 

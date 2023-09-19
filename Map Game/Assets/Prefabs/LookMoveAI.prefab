@@ -243,9 +243,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraTransform: {fileID: 1328921059}
-  missIndicator: {fileID: 0}
+  missIndicator: {fileID: 4328270943444734307, guid: 1c675d399948d294fafb0f8ab8f0d384, type: 3}
   reactionTime: 0.38
-  aimingGradient: 0.0146718
-  missGradient: 0.5
+  aimingGradient: 0.015
+  missGradient: 0.2
   xAccuracy: 0.363578
   yAccuracy: 0.129237
