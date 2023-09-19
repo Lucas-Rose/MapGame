@@ -18290,17 +18290,5 @@ PrefabInstance:
       propertyPath: indicatorContainer
       value: 
       objectReference: {fileID: 2096892953}
-    - target: {fileID: 8609920060218898526, guid: 2b3528be48713e345af7a9dfcb6a6ec9, type: 3}
-      propertyPath: missGradient
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8609920060218898526, guid: 2b3528be48713e345af7a9dfcb6a6ec9, type: 3}
-      propertyPath: missIndicator
-      value: 
-      objectReference: {fileID: 4328270943444734307, guid: 1c675d399948d294fafb0f8ab8f0d384, type: 3}
-    - target: {fileID: 8609920060218898526, guid: 2b3528be48713e345af7a9dfcb6a6ec9, type: 3}
-      propertyPath: aimingGradient
-      value: 0.015
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b3528be48713e345af7a9dfcb6a6ec9, type: 3}
