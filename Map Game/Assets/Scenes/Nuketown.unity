@@ -122,7 +122,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: 681daa7622c5ccd478f70b30069602b9, type: 2}
 --- !u!1 &17652776
 GameObject:
   m_ObjectHideFlags: 0
@@ -3449,6 +3449,63 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 360077561}
   m_Mesh: {fileID: 1969476169269212006, guid: fd490bc7fa3004a43bbee94741bb9a49, type: 3}
+--- !u!1001 &363278391
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7595780333557631178, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595780333557631178, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595780333557631178, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595780333557631178, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595780333557631178, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595780333557631178, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595780333557631178, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595780333557631178, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595780333557631178, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595780333557631178, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595780333557631178, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595780333557631182, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
+      propertyPath: m_Name
+      value: ComplexNavMeshAI
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: bcf71a48d84d3d8429fb604185c0cf6b, type: 3}
 --- !u!1 &385246090
 GameObject:
   m_ObjectHideFlags: 0
@@ -6034,7 +6091,7 @@ Transform:
   - {fileID: 1899871799}
   - {fileID: 1593989097}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &718732482
 GameObject:
