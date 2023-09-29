@@ -80,7 +80,7 @@ public class ComplexNMAgent : MonoBehaviour
             }
         }
     }
-    private void AddLocationGoal(Vector3 goalLocation)
+    public void AddLocationGoal(Vector3 goalLocation)
     {
         locationGoals.Add(goalLocation);
         List<Vector3> newPoints = GenerateWaypoints(goalLocation);
@@ -135,5 +135,9 @@ public class ComplexNMAgent : MonoBehaviour
             newList[i] = new Vector3(newList[i].x + xPush, newList[i].y, newList[i].z + zPush);
         }
         return newList;
+    }
+    public int RemainingWaypoints()
+    {
+        return waypoints.Count;
     }
 }
