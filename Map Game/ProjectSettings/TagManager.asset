@@ -7,8 +7,8 @@ TagManager:
   - Wall
   - Goal
   - Obstacle
-  - FSMTarget
   - AI
+  - FSMPoint
   layers:
   - Default
   - TransparentFX
@@ -16,7 +16,7 @@ TagManager:
   - Floor
   - Water
   - UI
-  - 
+  - AI
   - 
   - 
   - 

@@ -24,6 +24,7 @@ public class ComplexNMAgent : MonoBehaviour
     private List<Vector3> waypoints;
     private List<GameObject> goalIndicators;
     private NavMeshAgent agent;
+    private FSMBrain fsm;
 
     private void Start()
     {
@@ -35,7 +36,7 @@ public class ComplexNMAgent : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        /*if (Input.GetMouseButtonDown(0))
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -54,7 +55,7 @@ public class ComplexNMAgent : MonoBehaviour
             {
                 //Instantiate(obstacleIndicator, hit.point, Quaternion.identity);
             }
-        }
+        }*/
         if (waypoints.Count > 0)
         {
             if (!agent.hasPath && !agent.pathPending)
@@ -65,6 +66,11 @@ public class ComplexNMAgent : MonoBehaviour
             if (Vector3.Distance(transform.position, waypoints[0]) <= waypointSensitivity)
             {
                 waypoints.RemoveAt(0);
+                if (fsm.getLookBrain().basicAiming)
+                {
+                    fsm.getLookBrain().StartAiming(getFirstWaypoint() + Vector3.up);
+                }
+                
             }
         }
         if (locationGoals.Count > 0)
@@ -77,11 +83,13 @@ public class ComplexNMAgent : MonoBehaviour
                     goalIndicators.RemoveAt(0);
                 }
                 locationGoals.RemoveAt(0);
+                fsm.SetMode(FSMBrain.State.Waiting);
             }
         }
     }
     public void AddLocationGoal(Vector3 goalLocation)
     {
+        Debug.Log("Goal Added");
         locationGoals.Add(goalLocation);
         List<Vector3> newPoints = GenerateWaypoints(goalLocation);
         newPoints = OffSetWaypoints(newPoints);
@@ -92,6 +100,10 @@ public class ComplexNMAgent : MonoBehaviour
             DrawWaypoints(waypoints);
             goalIndicators.Add(Instantiate(goalIndicator, goalLocation, Quaternion.identity, indicatorContainer));
         }
+    }
+    public void AddFSMBrain(FSMBrain newBrain)
+    {
+        fsm = newBrain;
     }
     private List<Vector3> GenerateWaypoints(Vector3 point)
     {
@@ -139,5 +151,21 @@ public class ComplexNMAgent : MonoBehaviour
     public int RemainingWaypoints()
     {
         return waypoints.Count;
+    }
+    public Vector3 getFirstLocationGoal()
+    {
+        if(locationGoals.Count > 0)
+        {
+            return locationGoals[0];
+        }
+        return Vector3.zero;
+    }
+    public Vector3 getFirstWaypoint()
+    {
+        if (waypoints.Count > 0)
+        {
+            return waypoints[0];
+        }
+        return Vector3.zero;
     }
 }

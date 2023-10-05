@@ -10,6 +10,7 @@ public class LookBrain : MonoBehaviour
     private float currTime;
     private float movingTime;
     private int shotTotal;
+    public bool basicAiming;
 
     [Header("Components")]
     [SerializeField] private Transform cameraTransform;
@@ -22,6 +23,7 @@ public class LookBrain : MonoBehaviour
     [SerializeField] private float missGradient;
     [SerializeField] private float xAccuracy;
     [SerializeField] private float yAccuracy;
+    [SerializeField] private bool drawingIndicators;
 
 
     // Start is called before the first frame update
@@ -36,7 +38,7 @@ public class LookBrain : MonoBehaviour
     private void Update()
     {
 
-        if (Input.GetMouseButtonDown(1))
+        /*if (Input.GetMouseButtonDown(1))
         {
             shotPoints = new List<Vector3>();
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -44,7 +46,7 @@ public class LookBrain : MonoBehaviour
             if(Physics.Raycast(ray, out hit)){
                 StartAiming(hit.point);
             }
-        }
+        }*/
         if (canMove)
         {
             currTime += Time.deltaTime;
@@ -114,7 +116,11 @@ public class LookBrain : MonoBehaviour
             xLoc = target.x + offSetX;
             yLoc = target.y + offSetY;
             shotPoints.Add(new Vector3(xLoc, yLoc, target.z));
-            Instantiate(missIndicator, new Vector3(shotPoints[shotPoints.Count - 1].x, shotPoints[shotPoints.Count - 1].y, target.z), Quaternion.identity);
+            if (drawingIndicators)
+            {
+                Instantiate(missIndicator, new Vector3(shotPoints[shotPoints.Count - 1].x, shotPoints[shotPoints.Count - 1].y, target.z), Quaternion.identity);
+            }
+            
         }
         offSetX = Random.value > .5f ? Random.Range(-xAccuracy, 0) : Random.Range(0, xAccuracy);
         offSetY = Random.value > .5f ? Random.Range(-yAccuracy, 0) : Random.Range(0, yAccuracy);

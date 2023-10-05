@@ -5,9 +5,14 @@ using UnityEngine.AI;
 
 public class FSMBrain : MonoBehaviour
 {
+    //Objects
     private LookBrain lookBrain;
     private ComplexNMAgent moveBrain;
-    private bool isActive;
+
+    [Header("IDLE SETTINGS")]
+    private Vector2 waitTime = new Vector2(2, 4);
+    private float waitTimer = 0;
+
     public enum State
     {
         Patrolling,
@@ -16,54 +21,95 @@ public class FSMBrain : MonoBehaviour
         Dead
     }
     private State aiState;
-    private bool canMove;
+
     private GameObject[] patrolPoints;
+    private Transform lastPointAssigned;
 
     private void Start()
     {
         lookBrain = GetComponent<LookBrain>();
         moveBrain = GetComponent<ComplexNMAgent>();
-        isActive = false;
+        moveBrain.AddFSMBrain(this);
         patrolPoints = GameObject.FindGameObjectsWithTag("FSMPoint");
     }
     private void Update()
     {
-        if (isActive)
+        switch (aiState)
         {
-            switch (aiState)
-            {
-                case (State.Patrolling):
-                    if (moveBrain.RemainingWaypoints() == 0)
-                    {
-                        SelectPatrolPoint();
-                    }
-                    break;
-                case (State.Waiting):
-                    break;
-                case (State.Shooting):
-                    break;
-                case (State.Dead):
-                    break;
-            }
-        }        
+            case (State.Patrolling):
+                if (moveBrain.RemainingWaypoints() == 0)
+                {
+                    SelectPatrolPoint();
+                }
+                break;
+            case (State.Waiting):
+                waitTimer -= Time.deltaTime;
+                if(waitTimer < 0)
+                {
+                    SetMode(State.Patrolling);
+                }
+                break;
+            case (State.Shooting):
+                break;
+            case (State.Dead):
+                break;
+        }
     }
     public void SetMode(State state)
     {
         aiState = state;
+        switch (aiState)
+        {
+            case (State.Patrolling):
+                break;
+            case (State.Waiting):
+                waitTimer = Random.Range(waitTime.x, waitTime.y);
+                break;
+            case (State.Shooting):
+                break;
+            case (State.Dead):
+                break;
+        }
     }
     public void SelectPatrolPoint()
     {
-        Transform targetPoint = patrolPoints[Random.Range(0, patrolPoints.Length)].transform;
-        moveBrain.AddLocationGoal(targetPoint.position);
+        GameObject[] patrolCopy;
+        Transform targetPoint;
+        if (lastPointAssigned != null)
+        {
+            patrolCopy = new GameObject[patrolPoints.Length - 1];
+            int idx = 0;
+            for (int i = 0; i < patrolPoints.Length; i++)
+            {
+                if (patrolPoints[i].transform == lastPointAssigned)
+                {
+                    continue;
+                }
+                else
+                {
+                    patrolCopy[idx] = patrolPoints[i];
+                    idx++;
+                }
+            }
+            targetPoint = patrolCopy[Random.Range(0, patrolCopy.Length)].transform;
+            moveBrain.AddLocationGoal(targetPoint.position);
+            lastPointAssigned = targetPoint;
+        }
+        else
+        {
+            targetPoint = patrolPoints[Random.Range(0, patrolPoints.Length)].transform;
+            moveBrain.AddLocationGoal(targetPoint.position);
+            lastPointAssigned = targetPoint;
+        }
     }
+
     public void Activate()
     {
-        isActive = true;
         aiState = State.Patrolling;
         SelectPatrolPoint();
     }
-    public void Deactivate()
+    public LookBrain getLookBrain()
     {
-        isActive = false;
+        return lookBrain;
     }
 }

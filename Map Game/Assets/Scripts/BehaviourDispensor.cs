@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class BehaviourDispensor : MonoBehaviour
 {
-    private GameObject[] npcs;
     [SerializeField] private GameObject HTNPBoard;
+    private GameObject[] npcs;
     private enum AIMode { 
         FSM,
         BTree,
@@ -16,7 +16,7 @@ public class BehaviourDispensor : MonoBehaviour
     [SerializeField] private AIMode mode;
     private void Start()
     {
-        GameObject[] npcs = GameObject.FindGameObjectsWithTag("AI");
+        npcs = GameObject.FindGameObjectsWithTag("AI");
         DisperseBehaviours();
     }
     public void DisperseBehaviours()
