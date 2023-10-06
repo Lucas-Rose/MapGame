@@ -328,6 +328,7 @@ MonoBehaviour:
   xOffset: {x: -1, y: 1}
   zOffset: {x: -1, y: 1}
   drawingIndicators: 0
+  minWaitTime: 1
 --- !u!114 &2131869918
 MonoBehaviour:
   m_ObjectHideFlags: 0

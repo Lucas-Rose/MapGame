@@ -22,6 +22,8 @@ public class ComplexNMAgent : MonoBehaviour
 
     private List<Vector3> locationGoals;
     private List<Vector3> waypoints;
+    [SerializeField] private float minWaitTime;
+    private float stuckTime;
     private List<GameObject> goalIndicators;
     private NavMeshAgent agent;
     private FSMBrain fsm;
@@ -84,6 +86,16 @@ public class ComplexNMAgent : MonoBehaviour
                 }
                 locationGoals.RemoveAt(0);
                 fsm.SetMode(FSMBrain.State.Waiting);
+            }
+            if(agent.velocity.magnitude < 0.5 && fsm.GetState() != FSMBrain.State.Patrolling)
+            {
+                stuckTime += Time.deltaTime;
+                if(stuckTime > minWaitTime)
+                {
+                    ResetWaypoints();
+                    fsm.SelectPatrolPoint();
+                    stuckTime = 0;
+                }
             }
         }
     }
@@ -167,5 +179,14 @@ public class ComplexNMAgent : MonoBehaviour
             return waypoints[0];
         }
         return Vector3.zero;
+    }
+    public void ResetLocationGoals()
+    {
+        locationGoals = new List<Vector3>();
+    }
+    public void ResetWaypoints()
+    {
+        locationGoals = new List<Vector3>();
+        waypoints = new List<Vector3>();
     }
 }

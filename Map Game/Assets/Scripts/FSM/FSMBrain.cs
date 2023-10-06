@@ -112,4 +112,8 @@ public class FSMBrain : MonoBehaviour
     {
         return lookBrain;
     }
+    public State GetState()
+    {
+        return aiState;
+    }
 }
