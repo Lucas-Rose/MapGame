@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2072607951
 Transform:
   m_ObjectHideFlags: 0
@@ -350,3 +350,7 @@ MonoBehaviour:
   xAccuracy: 0.1
   yAccuracy: 0.1
   drawingIndicators: 0
+  scanFrequency: 8
+  scanRange: 45
+  scanRadius: 10
+  drawViewRays: 1

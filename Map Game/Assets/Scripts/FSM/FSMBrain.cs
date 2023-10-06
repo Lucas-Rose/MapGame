@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
-
 public class FSMBrain : MonoBehaviour
 {
     //Objects
@@ -13,6 +11,7 @@ public class FSMBrain : MonoBehaviour
     private Vector2 waitTime = new Vector2(2, 4);
     private float waitTimer = 0;
 
+    //State
     public enum State
     {
         Patrolling,
@@ -22,6 +21,7 @@ public class FSMBrain : MonoBehaviour
     }
     private State aiState;
 
+    //Points
     private GameObject[] patrolPoints;
     private Transform lastPointAssigned;
 
@@ -34,6 +34,8 @@ public class FSMBrain : MonoBehaviour
     }
     private void Update()
     {
+        Vector3 forward = transform.TransformDirection(Vector3.forward) * 10;
+        
         switch (aiState)
         {
             case (State.Patrolling):
@@ -66,6 +68,7 @@ public class FSMBrain : MonoBehaviour
                 waitTimer = Random.Range(waitTime.x, waitTime.y);
                 break;
             case (State.Shooting):
+                moveBrain.ResetWaypoints();
                 break;
             case (State.Dead):
                 break;

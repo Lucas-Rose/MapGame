@@ -9,6 +9,7 @@ TagManager:
   - Obstacle
   - AI
   - FSMPoint
+  - Enemy
   layers:
   - Default
   - TransparentFX

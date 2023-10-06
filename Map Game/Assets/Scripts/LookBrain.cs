@@ -12,12 +12,11 @@ public class LookBrain : MonoBehaviour
     private int shotTotal;
     public bool basicAiming;
 
-    [Header("Components")]
+    [Header("COMPONENTS")]
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private GameObject missIndicator;
-    private Camera cam;
 
-    [Header("Parameters")]
+    [Header("PARAMETERS")]
     [SerializeField] private float reactionTime; //from idle to rotating towards target
     [SerializeField] private float aimingGradient;
     [SerializeField] private float missGradient;
@@ -25,11 +24,20 @@ public class LookBrain : MonoBehaviour
     [SerializeField] private float yAccuracy;
     [SerializeField] private bool drawingIndicators;
 
+    [Header("SCAN SETTINGS")]
+    [SerializeField] private float scanFrequency;
+    [SerializeField] private float scanRange; //Degrees
+    [SerializeField] private float scanRadius;
+    [SerializeField] private bool drawViewRays;
+    private List<Vector3> viewRays;
+
+    private BehaviourDispensor bd;
+    private FSMBrain fsm;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        cam = cameraTransform.GetComponent<Camera>();
         shotPoints = new List<Vector3>();
         canMove = true;
         reacted = false;
@@ -83,6 +91,75 @@ public class LookBrain : MonoBehaviour
                     reacted = false;
                 }
             }   
+        }
+        GenerateViewRays();
+        if(bd.getMode() == BehaviourDispensor.AIMode.FSM)
+        {
+            if(fsm.GetState() != FSMBrain.State.Shooting)
+            {
+                TestViewRays();
+            }
+        }
+        
+        if (drawViewRays)
+        {
+            DrawViewRays();
+        }
+        
+    }
+
+    public void GenerateViewRays()
+    {
+        viewRays = new List<Vector3>();
+        float totalRange = scanRange - -scanRange;
+        float segmentWidth = totalRange / scanFrequency;
+
+        for(int i = 0; i < scanFrequency+1; i++)
+        {
+            Vector3 forward = transform.forward;
+            forward = Quaternion.Euler(0, -scanRange + i * segmentWidth, 0) * forward * scanRadius;
+            viewRays.Add(forward);
+        }
+    }
+    public void DrawViewRays()
+    {
+        for (int i = 0; i < viewRays.Count; i++)
+        {
+            Debug.DrawRay(transform.position, viewRays[i], Color.green);
+        }
+    }
+    public void TestViewRays()
+    {
+        for(int i = 0; i < viewRays.Count; i++)
+        {
+            RaycastHit hit;
+            if(Physics.Raycast(new Ray(transform.position, viewRays[i]), out hit, scanRadius, Physics.AllLayers))
+            {
+                if (hit.transform.gameObject.CompareTag("Enemy"))
+                {
+                    if(bd.getMode() == BehaviourDispensor.AIMode.FSM)
+                    {
+                        if(fsm.GetState() != FSMBrain.State.Shooting)
+                        {
+                            StartAiming(hit.point);
+                        }
+                    }
+                    if (bd.getMode() == BehaviourDispensor.AIMode.BTree)
+                    {
+
+                    }
+                    if (bd.getMode() == BehaviourDispensor.AIMode.GOAP)
+                    {
+
+                    }
+                    if (bd.getMode() == BehaviourDispensor.AIMode.HTNP)
+                    {
+
+                    }
+                    fsm.SetMode(FSMBrain.State.Shooting);
+                    StartAiming(hit.point);
+                }
+            }
         }
     }
 
@@ -139,5 +216,13 @@ public class LookBrain : MonoBehaviour
     {
         transform.localRotation = Quaternion.Euler(0, 0, 0);
         cameraTransform.localRotation = Quaternion.Euler(0, 0, 0);
+    }
+    public void AddFSMBrain(FSMBrain newBrain)
+    {
+        fsm = newBrain;
+    }
+    public void AddBehaviourDispensor(BehaviourDispensor dispensor)
+    {
+        bd = dispensor;
     }
 }

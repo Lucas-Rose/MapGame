@@ -6,7 +6,7 @@ public class BehaviourDispensor : MonoBehaviour
 {
     [SerializeField] private GameObject HTNPBoard;
     private GameObject[] npcs;
-    private enum AIMode { 
+    public enum AIMode { 
         FSM,
         BTree,
         GOAP,
@@ -26,18 +26,22 @@ public class BehaviourDispensor : MonoBehaviour
                 foreach(GameObject i in npcs)
                 {
                     i.AddComponent<FSMBrain>();
+                    i.GetComponent<LookBrain>().AddBehaviourDispensor(this);
+                    i.GetComponent<LookBrain>().AddFSMBrain(i.GetComponent<FSMBrain>());
                 }
                 break;
             case (AIMode.BTree):
                 foreach (GameObject i in npcs)
                 {
                     i.AddComponent<BTreeBrain>();
+                    i.GetComponent<LookBrain>().AddBehaviourDispensor(this);
                 }
                 break;
             case (AIMode.GOAP):
                 foreach (GameObject i in npcs)
                 {
                     i.AddComponent<GOAPBrain>();
+                    i.GetComponent<LookBrain>().AddBehaviourDispensor(this);
                 }
                 break;
             case (AIMode.HTNP):
@@ -46,9 +50,13 @@ public class BehaviourDispensor : MonoBehaviour
                 {
                     i.AddComponent<HTNPBrain>();
                     i.GetComponent<HTNPBrain>().Link(htnpManager);
+                    i.GetComponent<LookBrain>().AddBehaviourDispensor(this);
                 }
                 break;
         }
-
+    }
+    public AIMode getMode()
+    {
+        return mode;
     }
 }
