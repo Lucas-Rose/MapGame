@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     {
         gameState = GameState.countdown;
         ui = FindObjectOfType<UIManager>();
+        bd = FindObjectOfType<BehaviourDispensor>();
         roundTime = roundLength;
         countDownTime = countDownLength;
         ui.UpdateCountDown(roundTime);
@@ -49,6 +50,17 @@ public class GameManager : MonoBehaviour
         {
             SendFeedRequest("Respawned", "Alpha", null);
         }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (roundPlaying)
+            {
+                Pause(!roundPlaying);
+            }
+            else
+            {
+                Pause(roundPlaying);
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -63,6 +75,7 @@ public class GameManager : MonoBehaviour
                     countDownTime = countDownLength;
                     ui.DeactivateCountdown();
                     gameState = GameState.playing;
+                    bd.ToggleMove(true);
                 }
                 break;
             case (GameState.playing):
@@ -85,5 +98,17 @@ public class GameManager : MonoBehaviour
     public void SendFeedRequest(string action, string player, string victim)
     {
         ui.UpdateKillFeed(action, player, victim);
+    }
+    public void Pause(bool state)
+    {
+        roundPlaying = state;
+        if (!roundPlaying)
+        {
+            bd.ToggleMove(false);
+        }
+        else
+        {
+            bd.ToggleMove(true);
+        }
     }
 }

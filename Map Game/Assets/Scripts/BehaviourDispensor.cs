@@ -95,23 +95,20 @@ public class BehaviourDispensor : MonoBehaviour
             switch (mode)
             {
                 case (AIMode.FSM):
-                    i.GetComponent<LookBrain>().SetCanMove(state);
-                    i.GetComponent<MoveBrain>().
+                    i.GetComponent<FSMBrain>().SetCanMove(state);
                     break;
                 case (AIMode.GOAP):
-                    newAgent.AddComponent<GOAPBrain>();
-                    newAgent.GetComponent<LookBrain>().AddBehaviourDispensor(this);
+                    i.GetComponent<GOAPBrain>().SetCanMove(state);
                     break;
                 case (AIMode.BTree):
-                    newAgent.AddComponent<BTreeBrain>();
-                    newAgent.GetComponent<LookBrain>().AddBehaviourDispensor(this);
+                    i.GetComponent<BTreeBrain>().SetCanMove(state);
                     break;
                 case (AIMode.HTNP):
-                    newAgent.AddComponent<HTNPBrain>();
-                    newAgent.GetComponent<HTNPBrain>().Link(htnpManager);
-                    newAgent.GetComponent<LookBrain>().AddBehaviourDispensor(this);
+                    i.GetComponent<HTNPBrain>().SetCanMove(state);
                     break;
             }
+            i.GetComponent<LookBrain>().SetCanMove(state);
+            i.GetComponent<ComplexNMAgent>().SetCanMove(state);
         }
     }
 }

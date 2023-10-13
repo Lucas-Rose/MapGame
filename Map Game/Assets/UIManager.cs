@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text countDownText;
     [SerializeField] private TMP_Text killfeedText;
     [SerializeField] private int maxKillFeedActions;
+    [SerializeField] private GameObject pauseMenu;
 
     private List<string> killfeedStack;
 
@@ -16,6 +17,7 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         killfeedStack = new List<string>();
+        pauseMenu.SetActive(false);
     }
 
     public void UpdateRoundTimer(float time)
@@ -30,6 +32,10 @@ public class UIManager : MonoBehaviour
     {
         countDownText.gameObject.SetActive(false);
     }
+    public void TogglePause(bool state)
+    {
+        pauseMenu.SetActive(state);
+    }
 
     public void UpdateKillFeed(string action, string player, string victim)
     {
@@ -42,7 +48,7 @@ public class UIManager : MonoBehaviour
                 break;
             case ("Respawned"):
                 killfeedStack.Add(player + " respawned..." + "\n");
-                break;
+                break; 
             case ("Moving"):
                 break;
             case ("Update"):

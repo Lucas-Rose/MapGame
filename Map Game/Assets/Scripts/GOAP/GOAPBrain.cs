@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GOAPBrain : MonoBehaviour
 {
+    private bool canMove;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +15,9 @@ public class GOAPBrain : MonoBehaviour
     void Update()
     {
         
+    }
+    public void SetCanMove(bool state)
+    {
+        canMove = state;
     }
 }

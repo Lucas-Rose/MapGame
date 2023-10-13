@@ -6,6 +6,7 @@ public class FSMBrain : MonoBehaviour
     //Objects
     private LookBrain lookBrain;
     private ComplexNMAgent moveBrain;
+    private bool canMove;
 
     [Header("IDLE SETTINGS")]
     private Vector2 waitTime = new Vector2(2, 4);
@@ -31,30 +32,32 @@ public class FSMBrain : MonoBehaviour
         moveBrain = GetComponent<ComplexNMAgent>();
         moveBrain.AddFSMBrain(this);
         patrolPoints = GameObject.FindGameObjectsWithTag("FSMPoint");
+        canMove = false;
     }
     private void Update()
     {
-        Vector3 forward = transform.TransformDirection(Vector3.forward) * 10;
-        
-        switch (aiState)
+        if (canMove)
         {
-            case (State.Patrolling):
-                if (moveBrain.RemainingWaypoints() == 0)
-                {
-                    SelectPatrolPoint();
-                }
-                break;
-            case (State.Waiting):
-                waitTimer -= Time.deltaTime;
-                if(waitTimer < 0)
-                {
-                    SetMode(State.Patrolling);
-                }
-                break;
-            case (State.Shooting):
-                break;
-            case (State.Dead):
-                break;
+            switch (aiState)
+            {
+                case (State.Patrolling):
+                    if (moveBrain.RemainingWaypoints() == 0)
+                    {
+                        SelectPatrolPoint();
+                    }
+                    break;
+                case (State.Waiting):
+                    waitTimer -= Time.deltaTime;
+                    if (waitTimer < 0)
+                    {
+                        SetMode(State.Patrolling);
+                    }
+                    break;
+                case (State.Shooting):
+                    break;
+                case (State.Dead):
+                    break;
+            }
         }
     }
     public void SetMode(State state)
@@ -118,5 +121,9 @@ public class FSMBrain : MonoBehaviour
     public State GetState()
     {
         return aiState;
+    }
+    public void SetCanMove(bool state)
+    {
+        canMove = state;
     }
 }

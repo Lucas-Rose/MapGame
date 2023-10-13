@@ -23,6 +23,7 @@ public class ComplexNMAgent : MonoBehaviour
     private List<Vector3> locationGoals;
     private List<Vector3> waypoints;
     [SerializeField] private float minWaitTime;
+    private bool canMove;
     private float stuckTime;
     private List<GameObject> goalIndicators;
     private NavMeshAgent agent;
@@ -62,7 +63,10 @@ public class ComplexNMAgent : MonoBehaviour
         {
             if (!agent.hasPath && !agent.pathPending)
             {
-                agent.SetDestination(waypoints[0]);
+                if (canMove)
+                {
+                    agent.SetDestination(waypoints[0]);
+                }
             }
 
             if (Vector3.Distance(transform.position, waypoints[0]) <= waypointSensitivity)
@@ -188,5 +192,9 @@ public class ComplexNMAgent : MonoBehaviour
     {
         locationGoals = new List<Vector3>();
         waypoints = new List<Vector3>();
+    }
+    public void SetCanMove(bool state)
+    {
+        canMove = state;
     }
 }
