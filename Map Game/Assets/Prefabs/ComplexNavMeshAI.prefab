@@ -350,7 +350,7 @@ MonoBehaviour:
   xAccuracy: 0.1
   yAccuracy: 0.1
   drawingIndicators: 0
-  scanFrequency: 8
+  scanFrequency: 16
   scanRange: 45
-  scanRadius: 10
+  scanRadius: 30
   drawViewRays: 1

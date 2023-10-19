@@ -106,6 +106,7 @@ public class ComplexNMAgent : MonoBehaviour
     public void AddLocationGoal(Vector3 goalLocation)
     {
         Debug.Log("Goal Added");
+        agent.isStopped = false;
         locationGoals.Add(goalLocation);
         List<Vector3> newPoints = GenerateWaypoints(goalLocation);
         newPoints = OffSetWaypoints(newPoints);
@@ -186,7 +187,8 @@ public class ComplexNMAgent : MonoBehaviour
     }
     public void ResetLocationGoals()
     {
-        locationGoals = new List<Vector3>();
+        ResetWaypoints();
+        agent.isStopped = true;
     }
     public void ResetWaypoints()
     {

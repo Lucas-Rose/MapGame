@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -50,17 +51,6 @@ public class GameManager : MonoBehaviour
         {
             SendFeedRequest("Respawned", "Alpha", null);
         }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (roundPlaying)
-            {
-                Pause(!roundPlaying);
-            }
-            else
-            {
-                Pause(roundPlaying);
-            }
-        }
     }
 
     private void FixedUpdate()
@@ -99,16 +89,15 @@ public class GameManager : MonoBehaviour
     {
         ui.UpdateKillFeed(action, player, victim);
     }
-    public void Pause(bool state)
+    public static void FinishGame(bool state)
     {
-        roundPlaying = state;
-        if (!roundPlaying)
+        if (state)
         {
-            bd.ToggleMove(false);
+            SceneManager.LoadScene("Win"); 
         }
         else
         {
-            bd.ToggleMove(true);
+            SceneManager.LoadScene("Die");
         }
     }
 }

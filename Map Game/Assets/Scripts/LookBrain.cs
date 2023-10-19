@@ -45,16 +45,6 @@ public class LookBrain : MonoBehaviour
 
     private void Update()
     {
-
-        /*if (Input.GetMouseButtonDown(1))
-        {
-            shotPoints = new List<Vector3>();
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if(Physics.Raycast(ray, out hit)){
-                StartAiming(hit.point);
-            }
-        }*/
         if (canMove)
         {
             currTime += Time.deltaTime;
@@ -83,6 +73,10 @@ public class LookBrain : MonoBehaviour
 
                 if (movingTime > aimingGradient * Vector3.Distance(transform.position, shotPoints[0]) / shotTotal)
                 {
+                    if(fsm.GetState() == FSMBrain.State.Shooting)
+                    {
+                        Shoot(shotPoints[0]);
+                    }
                     shotPoints.RemoveAt(0);
                     movingTime = 0;
                 }
@@ -106,6 +100,26 @@ public class LookBrain : MonoBehaviour
             DrawViewRays();
         }
         
+    }
+    public void Shoot(Vector3 point)
+    {
+        Debug.Log("I'm shooting this now");
+        RaycastHit hit;
+        if (Physics.Raycast(new Ray(transform.position, point - transform.position), out hit, scanRadius + 20, Physics.AllLayers))
+        {
+            if (hit.transform.gameObject.CompareTag("Enemy"))
+            {
+                Debug.Log("I'm destroying this now");
+                Destroy(hit.transform.gameObject);
+                fsm.SetMode(FSMBrain.State.Patrolling);
+            }
+            if (hit.transform.gameObject.CompareTag("Player"))
+            {
+                Cursor.lockState = CursorLockMode.None;
+                GameManager.FinishGame(false);
+            }
+        }
+        Debug.DrawRay(transform.position, point, Color.red, 20);
     }
 
     public void GenerateViewRays()
@@ -135,13 +149,16 @@ public class LookBrain : MonoBehaviour
             RaycastHit hit;
             if(Physics.Raycast(new Ray(transform.position, viewRays[i]), out hit, scanRadius, Physics.AllLayers))
             {
-                if (hit.transform.gameObject.CompareTag("Enemy"))
+                if (hit.transform.gameObject.CompareTag("Enemy") || hit.transform.gameObject.CompareTag("Player"))
                 {
                     if(bd.getMode() == BehaviourDispensor.AIMode.FSM)
                     {
                         if(fsm.GetState() != FSMBrain.State.Shooting)
                         {
+                            Debug.Log("Found enemy");
                             StartAiming(hit.point);
+                            fsm.SetFocusEnemy(hit.transform.gameObject);
+                            fsm.SetMode(FSMBrain.State.Shooting);
                         }
                     }
                     if (bd.getMode() == BehaviourDispensor.AIMode.BTree)
@@ -224,5 +241,9 @@ public class LookBrain : MonoBehaviour
     public void AddBehaviourDispensor(BehaviourDispensor dispensor)
     {
         bd = dispensor;
+    }
+    public int GetShotPointsCount()
+    {
+        return shotPoints.Count;
     }
 }

@@ -22,6 +22,14 @@ public class BehaviourDispensor : MonoBehaviour
         npcs = GameObject.FindGameObjectsWithTag("AI");
         DisperseBehaviours();
     }
+
+    private void Update()
+    {
+        if(npcs.Length == 0)
+        {
+            GameManager.FinishGame(true);
+        }
+    }
     public void DisperseBehaviours()
     {
         switch (mode) {

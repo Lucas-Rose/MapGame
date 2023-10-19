@@ -4,5 +4,17 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: 21ad3c2b9bc47614991805102f9e0369
+  - enabled: 1
+    path: Assets/Scenes/Nuketown.unity
+    guid: 330e5bc1d29835b44a98c762c9f786e8
+  - enabled: 1
+    path: Assets/Scenes/Win.unity
+    guid: 2a8bb8a4181dd8d48bffefbd9cf5f23b
+  - enabled: 1
+    path: Assets/Scenes/Die.unity
+    guid: 64948d39baf6d09409071321f2a4e626
   m_configObjects: {}

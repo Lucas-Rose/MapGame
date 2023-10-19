@@ -7,6 +7,7 @@ public class FSMBrain : MonoBehaviour
     private LookBrain lookBrain;
     private ComplexNMAgent moveBrain;
     private bool canMove;
+    private GameObject focusEnemy;
 
     [Header("IDLE SETTINGS")]
     private Vector2 waitTime = new Vector2(2, 4);
@@ -43,6 +44,7 @@ public class FSMBrain : MonoBehaviour
                 case (State.Patrolling):
                     if (moveBrain.RemainingWaypoints() == 0)
                     {
+                        Debug.Log(gameObject.name + " selecting waypoint");
                         SelectPatrolPoint();
                     }
                     break;
@@ -54,6 +56,14 @@ public class FSMBrain : MonoBehaviour
                     }
                     break;
                 case (State.Shooting):
+                    if(focusEnemy == null)
+                    {
+                        aiState = State.Patrolling;
+                    }
+                    if(lookBrain.GetShotPointsCount() == 0)
+                    {
+                        lookBrain.StartAiming(focusEnemy.transform.position + new Vector3(0, 0.5f, 0));
+                    }
                     break;
                 case (State.Dead):
                     break;
@@ -71,7 +81,7 @@ public class FSMBrain : MonoBehaviour
                 waitTimer = Random.Range(waitTime.x, waitTime.y);
                 break;
             case (State.Shooting):
-                moveBrain.ResetWaypoints();
+                moveBrain.ResetLocationGoals();
                 break;
             case (State.Dead):
                 break;
@@ -125,5 +135,9 @@ public class FSMBrain : MonoBehaviour
     public void SetCanMove(bool state)
     {
         canMove = state;
+    }
+    public void SetFocusEnemy(GameObject newEnemy)
+    {
+        focusEnemy = newEnemy;
     }
 }

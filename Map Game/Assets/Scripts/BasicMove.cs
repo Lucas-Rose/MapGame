@@ -7,25 +7,12 @@ public class BasicMove : MonoBehaviour
     [SerializeField] private float walkSpeed;
     [SerializeField] private float sprintSpeed;
     private float currSpeed;
-    [SerializeField] private List<GameObject> cameras;
     private Rigidbody rb;
     private int camIndex;
     // Update is called once per frame
 
     private void Start()
     {
-        camIndex = 0;
-        for(int i = 0; i < cameras.Count; i++)
-        {
-            if(i != camIndex)
-            {
-                cameras[i].SetActive(false);
-            }
-            else
-            {
-                cameras[i].SetActive(true);
-            }
-        }
         currSpeed = walkSpeed;
         rb = GetComponent<Rigidbody>();
     }
@@ -41,12 +28,6 @@ public class BasicMove : MonoBehaviour
         {
             rb.position += moveY > 0 ? currSpeed * Time.deltaTime * transform.forward : currSpeed * Time.deltaTime * -transform.forward;
         }
-        
-        
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ChangeCamera();
-        }
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             currSpeed = sprintSpeed;
@@ -55,17 +36,5 @@ public class BasicMove : MonoBehaviour
         {
             currSpeed = walkSpeed;
         }
-    }
-
-    public void ChangeCamera()
-    {
-        cameras[camIndex].SetActive(false);
-        camIndex++;
-        Debug.Log(camIndex);
-        if(camIndex >= cameras.Count)
-        {
-            camIndex = 0;
-        }
-        cameras[camIndex].SetActive(true);
     }
 }
