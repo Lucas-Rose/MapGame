@@ -22,12 +22,15 @@ public class ComplexNMAgent : MonoBehaviour
 
     private List<Vector3> locationGoals;
     private List<Vector3> waypoints;
+    private GameObject[] patrolPoints;
     [SerializeField] private float minWaitTime;
     private bool canMove;
     private float stuckTime;
     private List<GameObject> goalIndicators;
     private NavMeshAgent agent;
     private FSMBrain fsm;
+    private BehaviourDispensor bd;
+    private BTreeBrain BTree;
 
     private void Start()
     {
@@ -36,6 +39,8 @@ public class ComplexNMAgent : MonoBehaviour
         goalIndicators = new List<GameObject>();
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
+        patrolPoints = GameObject.FindGameObjectsWithTag("FSMPoint");
+        bd = FindObjectOfType<BehaviourDispensor>();
     }
     void Update()
     {
@@ -72,9 +77,17 @@ public class ComplexNMAgent : MonoBehaviour
             if (Vector3.Distance(transform.position, waypoints[0]) <= waypointSensitivity)
             {
                 waypoints.RemoveAt(0);
-                if (fsm.getLookBrain().basicAiming)
+                switch (bd.getMode())
                 {
-                    fsm.getLookBrain().StartAiming(getFirstWaypoint() + Vector3.up);
+                    case BehaviourDispensor.AIMode.FSM:
+                        fsm.getLookBrain().StartAiming(getFirstWaypoint() + Vector3.up);
+                        break;
+                    case BehaviourDispensor.AIMode.BTree:
+                        break;
+                    case BehaviourDispensor.AIMode.GOAP:
+                        break;
+                    case BehaviourDispensor.AIMode.HTNP:
+                        break;
                 }
                 
             }
@@ -89,16 +102,22 @@ public class ComplexNMAgent : MonoBehaviour
                     goalIndicators.RemoveAt(0);
                 }
                 locationGoals.RemoveAt(0);
-                fsm.SetMode(FSMBrain.State.Waiting);
-            }
-            if(agent.velocity.magnitude < 0.5 && fsm.GetState() != FSMBrain.State.Patrolling)
-            {
-                stuckTime += Time.deltaTime;
-                if(stuckTime > minWaitTime)
+                if(bd.getMode() == BehaviourDispensor.AIMode.FSM)
                 {
-                    ResetWaypoints();
-                    fsm.SelectPatrolPoint();
-                    stuckTime = 0;
+                    fsm.SetMode(FSMBrain.State.Waiting);
+                }
+            }
+            if (bd.getMode() == BehaviourDispensor.AIMode.FSM)
+            {
+                if (agent.velocity.magnitude < 0.5 && fsm.GetState() != FSMBrain.State.Patrolling)
+                {
+                    stuckTime += Time.deltaTime;
+                    if (stuckTime > minWaitTime)
+                    {
+                        ResetWaypoints();
+                        fsm.SelectPatrolPoint();
+                        stuckTime = 0;
+                    }
                 }
             }
         }
@@ -118,9 +137,28 @@ public class ComplexNMAgent : MonoBehaviour
             goalIndicators.Add(Instantiate(goalIndicator, goalLocation, Quaternion.identity, indicatorContainer));
         }
     }
+    public void AddLocation()
+    {
+        Debug.Log("Goal Added");
+        agent.isStopped = false;
+        locationGoals.Add(patrolPoints[Random.Range(0, patrolPoints.Length)].transform.position);
+        List<Vector3> newPoints = GenerateWaypoints(locationGoals[0]);
+        newPoints = OffSetWaypoints(newPoints);
+        AddToWaypoints(newPoints);
+
+        if (drawingIndicators)
+        {
+            DrawWaypoints(waypoints);
+            goalIndicators.Add(Instantiate(goalIndicator, locationGoals[0], Quaternion.identity, indicatorContainer));
+        }
+    }
     public void AddFSMBrain(FSMBrain newBrain)
     {
         fsm = newBrain;
+    }
+    public void AddBTreeBrain(BTreeBrain newBrain)
+    {
+        BTree = newBrain;
     }
     private List<Vector3> GenerateWaypoints(Vector3 point)
     {

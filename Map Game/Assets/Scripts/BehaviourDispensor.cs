@@ -8,7 +8,9 @@ public class BehaviourDispensor : MonoBehaviour
     [SerializeField] private GameObject HTNPBoard;
     [SerializeField] private GameObject agentPrefab;
     [SerializeField] private List<Transform> spawnPoints;
+    [SerializeField] private RuntimeAnimatorController BTree;
     private GameObject[] npcs;
+    
     public enum AIMode { 
         FSM,
         BTree,
@@ -46,6 +48,7 @@ public class BehaviourDispensor : MonoBehaviour
                 {
                     i.AddComponent<BTreeBrain>();
                     i.GetComponent<LookBrain>().AddBehaviourDispensor(this);
+                    i.GetComponent<LookBrain>().AddBTreeBrain(i.GetComponent<BTreeBrain>());
                 }
                 break;
             case (AIMode.GOAP):
@@ -69,6 +72,10 @@ public class BehaviourDispensor : MonoBehaviour
     public AIMode getMode()
     {
         return mode;
+    }
+    public RuntimeAnimatorController GetBehaviourTree()
+    {
+        return BTree;
     }
     public void RespawnAgent()
     {

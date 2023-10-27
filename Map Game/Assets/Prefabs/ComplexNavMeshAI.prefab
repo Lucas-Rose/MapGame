@@ -352,5 +352,5 @@ MonoBehaviour:
   drawingIndicators: 0
   scanFrequency: 16
   scanRange: 45
-  scanRadius: 30
+  scanRadius: 700
   drawViewRays: 1

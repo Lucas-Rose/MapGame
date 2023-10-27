@@ -33,6 +33,8 @@ public class LookBrain : MonoBehaviour
 
     private BehaviourDispensor bd;
     private FSMBrain fsm;
+    private BTreeBrain bTreeBrain;
+    private GameObject focusEnemy;
 
 
     // Start is called before the first frame update
@@ -73,36 +75,49 @@ public class LookBrain : MonoBehaviour
 
                 if (movingTime > aimingGradient * Vector3.Distance(transform.position, shotPoints[0]) / shotTotal)
                 {
-                    if(fsm.GetState() == FSMBrain.State.Shooting)
+                    switch (bd.getMode())
                     {
-                        Shoot(shotPoints[0]);
+                        case BehaviourDispensor.AIMode.FSM:
+                            if(fsm.GetState() == FSMBrain.State.Shooting)
+                            {
+                                Shoot();
+                            }
+                            break;
+                        case BehaviourDispensor.AIMode.BTree:
+                            Shoot();
+                            break;
+                        case BehaviourDispensor.AIMode.GOAP:
+                            break;
+                        case BehaviourDispensor.AIMode.HTNP:
+                            break;
                     }
                     shotPoints.RemoveAt(0);
                     movingTime = 0;
                 }
-                if(shotPoints.Count == 0)
+                if (shotPoints.Count == 0)
                 {
                     reacted = false;
                 }
-            }   
+            }
         }
         GenerateViewRays();
-        if(bd.getMode() == BehaviourDispensor.AIMode.FSM)
+        if (bd.getMode() == BehaviourDispensor.AIMode.FSM)
         {
-            if(fsm.GetState() != FSMBrain.State.Shooting)
+            if (fsm.GetState() != FSMBrain.State.Shooting)
             {
                 TestViewRays();
             }
         }
-        
+
         if (drawViewRays)
         {
             DrawViewRays();
         }
-        
+
     }
-    public void Shoot(Vector3 point)
+    public void Shoot()
     {
+        Vector3 point = shotPoints[0];
         Debug.Log("I'm shooting this now");
         RaycastHit hit;
         if (Physics.Raycast(new Ray(transform.position, point - transform.position), out hit, scanRadius + 20, Physics.AllLayers))
@@ -128,7 +143,7 @@ public class LookBrain : MonoBehaviour
         float totalRange = scanRange - -scanRange;
         float segmentWidth = totalRange / scanFrequency;
 
-        for(int i = 0; i < scanFrequency+1; i++)
+        for (int i = 0; i < scanFrequency + 1; i++)
         {
             Vector3 forward = transform.forward;
             forward = Quaternion.Euler(0, -scanRange + i * segmentWidth, 0) * forward * scanRadius;
@@ -144,26 +159,30 @@ public class LookBrain : MonoBehaviour
     }
     public void TestViewRays()
     {
-        for(int i = 0; i < viewRays.Count; i++)
+        for (int i = 0; i < viewRays.Count; i++)
         {
             RaycastHit hit;
-            if(Physics.Raycast(new Ray(transform.position, viewRays[i]), out hit, scanRadius, Physics.AllLayers))
+            if (Physics.Raycast(new Ray(transform.position, viewRays[i]), out hit, scanRadius, Physics.AllLayers))
             {
+
                 if (hit.transform.gameObject.CompareTag("Enemy") || hit.transform.gameObject.CompareTag("Player"))
                 {
-                    if(bd.getMode() == BehaviourDispensor.AIMode.FSM)
+                    if (bd.getMode() == BehaviourDispensor.AIMode.FSM)
                     {
-                        if(fsm.GetState() != FSMBrain.State.Shooting)
+                        if (fsm.GetState() != FSMBrain.State.Shooting)
                         {
                             Debug.Log("Found enemy");
                             StartAiming(hit.point);
                             fsm.SetFocusEnemy(hit.transform.gameObject);
                             fsm.SetMode(FSMBrain.State.Shooting);
+                            return;
                         }
                     }
                     if (bd.getMode() == BehaviourDispensor.AIMode.BTree)
                     {
-
+                        bTreeBrain.ConfirmRayTest(true);
+                        focusEnemy = hit.transform.gameObject;
+                        return;
                     }
                     if (bd.getMode() == BehaviourDispensor.AIMode.GOAP)
                     {
@@ -178,6 +197,10 @@ public class LookBrain : MonoBehaviour
                 }
             }
         }
+        if (bd.getMode() == BehaviourDispensor.AIMode.BTree)
+        {
+            bTreeBrain.ConfirmRayTest(false);
+        }
     }
 
     public void StartAiming(Vector3 targetPos)
@@ -191,7 +214,30 @@ public class LookBrain : MonoBehaviour
 
         numberOfMiss += (Random.value > remainderChance) ? 1 : 0;
 
-        GenerateShotVectors(targetPos, (int)numberOfMiss);
+        if (targetPos == null)
+        {
+            GenerateShotVectors(focusEnemy.transform.position, (int)numberOfMiss);
+        }
+        else
+        {
+            GenerateShotVectors(targetPos, (int)numberOfMiss);
+        }
+
+        currTime = 0;
+    }
+    public void StartAiming()
+    {
+        float accuracyMeasure = Vector3.Distance(transform.position, focusEnemy.transform.position) * missGradient;
+
+        float numberOfMiss = 0;
+        numberOfMiss += (accuracyMeasure >= 1) ? Mathf.Floor(accuracyMeasure) : 0;
+
+        float remainderChance = Mathf.Floor(accuracyMeasure) >= 1 ? accuracyMeasure / 10f : accuracyMeasure;
+
+        numberOfMiss += (Random.value > remainderChance) ? 1 : 0;
+
+        GenerateShotVectors(focusEnemy.transform.position, (int)numberOfMiss);
+
         currTime = 0;
     }
 
@@ -214,7 +260,7 @@ public class LookBrain : MonoBehaviour
             {
                 Instantiate(missIndicator, new Vector3(shotPoints[shotPoints.Count - 1].x, shotPoints[shotPoints.Count - 1].y, target.z), Quaternion.identity);
             }
-            
+
         }
         offSetX = Random.value > .5f ? Random.Range(-xAccuracy, 0) : Random.Range(0, xAccuracy);
         offSetY = Random.value > .5f ? Random.Range(-yAccuracy, 0) : Random.Range(0, yAccuracy);
@@ -237,6 +283,10 @@ public class LookBrain : MonoBehaviour
     public void AddFSMBrain(FSMBrain newBrain)
     {
         fsm = newBrain;
+    }
+    public void AddBTreeBrain(BTreeBrain newBrain)
+    {
+        bTreeBrain = newBrain;
     }
     public void AddBehaviourDispensor(BehaviourDispensor dispensor)
     {
